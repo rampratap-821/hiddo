@@ -100,6 +100,7 @@ import { FiHome, FiUsers, FiSettings, FiLogOut } from "react-icons/fi";
 import { useNavigate, Link } from "react-router-dom";
 import DarTechnology from "../assets/image/image-removebg-preview.png";
 import { MdAppBlocking } from "react-icons/md";
+import { FaHome } from "react-icons/fa";
 
 const AdminPanel = ({ adminPanelOpen, onItemClick }) => {
   const navigate = useNavigate();
@@ -135,7 +136,14 @@ const AdminPanel = ({ adminPanelOpen, onItemClick }) => {
       {/* Menu Items */}
       <nav className="flex-1 p-3 space-y-2">
 
-
+<Link
+          to="/coin/Home"
+          onClick={handleMenuItemClick} // ✅ Ye line add karo
+          className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/10 transition-all duration-200"
+        >
+          <FaHome size={20} />
+          {adminPanelOpen && <span>Dashboard</span>}
+        </Link>
        
 
 
