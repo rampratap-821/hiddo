@@ -32,8 +32,8 @@ const CardOPenAdminPannel = () => {
                       flex flex-col justify-center items-center">
 
           {/* Small Title on Card */}
-          <p className="text-green-300 text-xl font-bold mb-3 tracking-wide drop-shadow">
-            COINCLASH PANEL
+          <p className="text-green-700 text-2xl font-bold mb-3 tracking-wide drop-shadow">
+            COINCLASH 
           </p>
 
           <img 
@@ -54,8 +54,8 @@ const CardOPenAdminPannel = () => {
                       flex flex-col justify-center items-center">
 
           {/* Small Title on Card */}
-          <p className="text-pink-300 text-xl font-bold mb-3 tracking-wide drop-shadow">
-            HIDDO PANEL
+          <p className="text-pink-700 text-2xl font-bold mb-3 tracking-wide drop-shadow">
+            HIDDO 
           </p>
 
           <img 

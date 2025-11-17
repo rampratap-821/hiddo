@@ -69,7 +69,7 @@ const Dashboard = () => {
       ) : (
         /* Desktop Sidebar - Normal behavior */
 
-        <div className={`${adminPanelOpen ? 'w-64' : 'w-20'} bg-black text-white font-bold flex flex-col transition-all duration-300 ease-in-out shadow-lg relative`}>
+        <div className={`${adminPanelOpen ? 'w-64' : 'w-0'} bg-black text-white font-bold flex flex-col transition-all duration-300 ease-in-out shadow-lg relative`}>
 
           <AdminPanel 
             adminPanelOpen={adminPanelOpen} 
@@ -86,7 +86,7 @@ const Dashboard = () => {
           isMobile={isMobile}
         />
         
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6 bg-gray-50">
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6 bg-gray-200">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>

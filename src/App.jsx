@@ -10,13 +10,19 @@ import Reports from "./pages/Reports";
 import Home from "./pages/Home";
 import Home2 from "./pages/Home2";
 import CardOPenAdminPannel from "./pages/CardOPenAdminPannel";
-
+import UserCoinHistory from "./CoinDanielOlakunle/UserCoinHistory";
 // HIDDO Project Pages
 import HiddoDashboard from "./HiddoPages/HiddoDashBoard";
 import HiddoHome from "./HiddoPages/HiddoHome";
 import HiddoUsers from "./HiddoPages/HiddoUsers";
 import HiddoSettings from "./HiddoPages/HiddoSettings";
 import HiddoHome2 from "./HiddoPages/HiddoHome2";
+import UpLaod_Videos from "./components/UpLaod_Videos";
+import Quize_Question from "./components/Quize_Question";
+import UsersList from "./components/UsersList";
+import Broadcast from "./components/Broadcast";
+import UserWantTOPayment from "./CoinDanielOlakunle/UserWantTOPayment";
+
 
 const App = () => {
   return (
@@ -33,9 +39,15 @@ const App = () => {
         <Route path="/coin/*" element={<Dashboard />}>
           <Route index element={<Home2 />} />
           <Route path="home" element={<Home />} />
-          <Route path="users" element={<Users />} />
           <Route path="settings" element={<Settings />} />
           <Route path="reports" element={<Reports />} />
+          <Route path="uploadVideos" element={<UpLaod_Videos />} />
+          <Route path="quizeQuestion" element={<Quize_Question />} />
+          <Route path="usersList" element={<UsersList />} />
+          <Route path="broadCast" element={<Broadcast />} />
+          <Route path="userCoinHistory" element={<UserCoinHistory />} />
+          <Route path="userWantToPayment" element={<UserWantTOPayment />} />
+
         </Route>
 
         {/* HIDDO Dashboard Routes */}

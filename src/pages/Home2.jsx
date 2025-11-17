@@ -8,43 +8,31 @@ import { MdPayment } from 'react-icons/md'
 
 const Home2 = () => {
   return (
-    <div className=' grid grid-cols-3 gap-5 '>
-    <div className='bg-yellow-700 text-white text-center py-10 [&>*]:py-2 font-bold text-2xl rounded-2xl'>
-      <h1 >306B</h1>
-      <h1 className='flex justify-center text-3xl'>
-        <FaUsers></FaUsers>
-      </h1>
-      <h1>Total Users</h1>
-    </div>
-
-
-     <div className='bg-teal-700 text-white text-center py-10 [&>*]:py-2 font-bold text-2xl rounded-2xl'>
-      <h1 >10M</h1>
-      <h1 className='flex justify-center text-3xl'>
-        <MdPayment></MdPayment>
-      </h1>
-      <h1>Payment by users</h1>
-    </div>
-
-
-
-     <div className='bg-pink-700 text-white text-center py-10 [&>*]:py-2 font-bold text-2xl rounded-2xl'>
-      <h1 >306</h1>
-      <h1 className='flex justify-center text-3xl'>
-        <FaUsers></FaUsers>
-      </h1>
-      <h1>Total Users</h1>
-    </div>
-
-     <div className='bg-violet-700 text-white text-center py-10 [&>*]:py-2 font-bold text-2xl rounded-2xl'>
-      <h1 >306</h1>
-      <h1 className='flex justify-center text-3xl'>
-        <FaUsers></FaUsers>
-      </h1>
-      <h1>Total Users</h1>
-    </div>
+       <div>
+           <h1 className='text-center pb-5 text-4xl font-bold'>Admin DashBoard</h1>
+         <div className=' grid grid-cols-2 gap-5 '>
+         <div className='bg-yellow-700 text-white text-center py-10 [&>*]:py-2 font-bold text-2xl rounded-2xl'>
+           <h1 >306B</h1>
+           <h1 className='flex justify-center text-3xl'>
+             <FaUsers></FaUsers>
+           </h1>
+           <h1>Total Users</h1>
+         </div>
      
-    </div>
+     
+          <div className='bg-teal-700 text-white text-center py-10 [&>*]:py-2 font-bold text-2xl rounded-2xl'>
+           <h1 >10M</h1>
+           <h1 className='flex justify-center text-3xl'>
+             <MdPayment></MdPayment>
+           </h1>
+           <h1>Payment by users</h1>
+         </div>
+     
+     
+     
+          
+         </div>
+         </div>
   )
 }
 
