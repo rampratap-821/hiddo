@@ -4,8 +4,31 @@ import { FiBell, FiSearch, FiLogOut, FiUser, FiMenu } from "react-icons/fi";
 import { PiListDashesBold, PiListDashesFill } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 
-const Header = ({ adminPanelOpen, setAdminPanelOpen, isMobile }) => {
- 
+const Header = ({ adminPanelOpen, setAdminPanelOpen, isMobile, usersLists, setUsersList, allUsers, setAllUsers }) => {
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (searchValue) => {
+    setSearchTerm(searchValue);
+
+    if (searchValue.trim() === "") {
+    
+      setUsersList(allUsers);
+    } else {
+   
+      const filteredUsers = allUsers.filter(user =>
+        user.fullName?.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      setUsersList(filteredUsers);
+    }
+  };
+
+
+
+
+
+
+
   const [showUserMenu, setShowUserMenu] = useState(false);
   const navigate = useNavigate();
 
@@ -26,6 +49,8 @@ const Header = ({ adminPanelOpen, setAdminPanelOpen, isMobile }) => {
 
   return (
     <header className="bg-black shadow-md border-b border-green-800 sticky top-0 z-20 transition-all duration-300">
+      
+
       <div className="flex items-center justify-between px-4 md:px-6 py-3">
         {/* Left Section */}
         <div className="flex items-center gap-4">
@@ -56,8 +81,8 @@ const Header = ({ adminPanelOpen, setAdminPanelOpen, isMobile }) => {
             <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60" />
             <input
               type="text"
-             
-             
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
               placeholder="Search..."
               className="pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-xl 
                          text-white placeholder-white/70 focus:outline-none focus:ring-2 
@@ -68,7 +93,7 @@ const Header = ({ adminPanelOpen, setAdminPanelOpen, isMobile }) => {
 
         {/* Right Section */}
         <div className="flex items-center gap-3">
-         
+
 
           {/* Notification Bell */}
           <button className="relative p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors duration-200">
@@ -78,7 +103,7 @@ const Header = ({ adminPanelOpen, setAdminPanelOpen, isMobile }) => {
 
 
 
-          
+
 
           {/* User Dropdown */}
           <div className="relative">
@@ -95,7 +120,7 @@ const Header = ({ adminPanelOpen, setAdminPanelOpen, isMobile }) => {
             {/* Dropdown Menu */}
             {showUserMenu && (
               <div className="absolute right-0 top-12 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-30 animate-fadeIn">
-                <button 
+                <button
                   onClick={() => {
                     // Profile click par mobile sidebar close ho
                     closeAdminPanel();
@@ -104,9 +129,9 @@ const Header = ({ adminPanelOpen, setAdminPanelOpen, isMobile }) => {
                   className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-150"
                 >
                   Profile
-                </button>    
-                
-                <button 
+                </button>
+
+                <button
                   onClick={() => {
                     // Settings click par mobile sidebar close ho
                     closeAdminPanel();
@@ -139,6 +164,9 @@ const Header = ({ adminPanelOpen, setAdminPanelOpen, isMobile }) => {
         <div className="relative">
           <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60" />
           <input
+            value={searchTerm}
+            onChange={(e) => handleSearch(e.target.value)}
+
             type="text"
             placeholder="Search..."
             className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/70

@@ -8,7 +8,9 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import AdminPanel from "../components/AdminPanel";
 
-const Dashboard = () => {
+const Dashboard = ({usersLists, setUsersList,allUsers, setAllUsers}) => {
+
+
   const [adminPanelOpen, setAdminPanelOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -80,7 +82,7 @@ const Dashboard = () => {
       
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
-        <Header 
+        <Header usersLists ={usersLists} setUsersList={setUsersList} allUsers={allUsers} setAllUsers={setAllUsers}
           adminPanelOpen={adminPanelOpen}
           setAdminPanelOpen={setAdminPanelOpen}
           isMobile={isMobile}

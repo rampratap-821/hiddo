@@ -184,10 +184,10 @@ const AdminPanel = ({ adminPanelOpen, onItemClick }) => {
 
               <h1 className="text-center text-yellow-600 font-bold pb-2">🪙🪙Coins Record</h1>
 
-              <h1 className="bg-red-700 px-2 py-2 rounded hover:bg-green-800 ">
+              <h1 className="bg-red-700 px-2 py-2 rounded hover:bg-green-800 "onClick={handleMenuItemClick}>
                 < button  onClick={()=>navigate("/coin/userCoinHistory")} >User Coins HIstory</button>
               </h1>
-              <h1 className="bg-red-700 px-2 py-2 rounded  hover:bg-green-800">
+              <h1 className="bg-red-700 px-2 py-2 rounded  hover:bg-green-800" onClick={handleMenuItemClick}>
                 < button onClick={()=>navigate("/coin/userWantToPayment")}>User want to payment</button>
               </h1>
 

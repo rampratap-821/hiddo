@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Main Project Pages
@@ -25,6 +25,10 @@ import UserWantTOPayment from "./CoinDanielOlakunle/UserWantTOPayment";
 
 
 const App = () => {
+   const [usersLists, setUsersList] = useState([]);
+   const [allUsers, setAllUsers] = useState([]);
+
+    
   return (
     <Router>
       <Routes>
@@ -36,14 +40,14 @@ const App = () => {
         <Route path="/cardOpenAdminPannel" element={<CardOPenAdminPannel />} />
 
         {/* Coin Dashboard Routes */}
-        <Route path="/coin/*" element={<Dashboard />}>
+        <Route path="/coin/*" element={<Dashboard usersLists ={usersLists} setUsersList={setUsersList} allUsers={allUsers} setAllUsers={setAllUsers}/>}>
           <Route index element={<Home2 />} />
           <Route path="home" element={<Home />} />
           <Route path="settings" element={<Settings />} />
           <Route path="reports" element={<Reports />} />
           <Route path="uploadVideos" element={<UpLaod_Videos />} />
           <Route path="quizeQuestion" element={<Quize_Question />} />
-          <Route path="usersList" element={<UsersList />} />
+          <Route path="usersList" element={<UsersList usersLists ={usersLists}   setUsersList={ setUsersList} allUsers={allUsers} setAllUsers={setAllUsers}/>} />
           <Route path="broadCast" element={<Broadcast />} />
           <Route path="userCoinHistory" element={<UserCoinHistory />} />
           <Route path="userWantToPayment" element={<UserWantTOPayment />} />
@@ -65,3 +69,20 @@ const App = () => {
 };
 
 export default App;
+
+
+
+
+// Array(5)
+// 1
+// : 
+// {email: 'devankkaranwal@dartAdmin.dart', password: 'devankkaranwal123@admin'}
+// 2
+// : 
+// {email: 'riponsk@dartAdmin.dart', password: 'Arshansk512@'}
+// 3
+// : 
+// {email: 'tajmirakhatun@dartAdmin.dart', password: 'Arshanksk512@"'}
+// 4
+// : 
+// {email: 'michele@dartAdmin.dart', password: 'michelePh@admin'}

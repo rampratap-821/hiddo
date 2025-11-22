@@ -1,161 +1,207 @@
 
 
 
-// import React from "react";
-// import { useNavigate } from "react-router-dom";
-// import DarTechnology from "../assets/image/image-removebg-preview.png";
-// import { MdEmail } from "react-icons/md";
-// import { RiLockPasswordFill } from "react-icons/ri";
-
-// const Login = () => {
-//   const navigate = useNavigate();
-
-//   const handleLogin = (e) => {
-//     e.preventDefault();
-//     navigate("/dashboard");
-//   };
-
-//   return (
-//     <div className="bg-gradient-to-br from-green-700 to-green-900 flex justify-center items-center min-h-screen p-4">
-//       <div className="w-full max-w-md">
-//         <form
-//           onSubmit={handleLogin}
-//           className="bg-black border border-white/20 p-6 rounded-3xl shadow-2xl w-full"
-//         >
-//           <div className="flex justify-center mb-6">
-//             <img 
-//               src={DarTechnology} 
-//               alt="Logo" 
-//               className="w-32 h-32 md:w-40 md:h-40 drop-shadow-lg" 
-//             />
-//           </div>
-          
-//           <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 text-white">
-//            Login
-//           </h2>
-
-//           <div className="mb-6 relative bg-green-700 rounded-2xl">
-//             <MdEmail className="absolute left-4 top-4 text-white" size={20} />
-//             <input
-//               type="email"
-//               placeholder="Enter your email"
-             
-//               className="w-full pl-12 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 "
-//             />
-//           </div>
-
-//           <div className="mb-8 relative  bg-green-700 rounded-2xl ">
-//             <RiLockPasswordFill
-//               className="absolute left-4 top-4 text-white"
-//               size={20}
-//             />
-//             <input
-//               type="password"
-//               placeholder="Enter your password"
-            
-//               className="w-full pl-12 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 "
-//             />
-//           </div>
-
-//           <button
-//             type="submit"
-//             className="w-full text-white bg-green-700  py-3 rounded-xl font-bold text-lg "
-//           >
-//             Login
-//           </button>
-
-         
-//         </form>
-        
-      
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Login;
 
 
 
 
-
-
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { jwtDecode } from 'jwt-decode'; // ✅ Fixed import name
 import { useNavigate } from "react-router-dom";
-import DarTechnology from "../assets/image/image-removebg-preview.png";
-import { MdEmail } from "react-icons/md";
-import { RiLockPasswordFill } from "react-icons/ri";
+import coin from '../assets/image/image-removebg-preview.png'
+
+// IMPORT YOUR FIREBASE FUNCTIONS
+import { fetchTotalUsersLists, fetchAdminEmails, updateUserCredByEmail } from "../Model/firebaseHelpers";
+import { SignInModel } from "../Model/SignInModel";
+import { signInClickCash } from "../Model/authService";
+import SignUpModel from "../Model/SignUpModel";
 
 const Login = () => {
+  console.log("ram",fetchTotalUsersLists)
+  console.log("ramu",fetchAdminEmails())
+
+  console.log("rampala",updateUserCredByEmail())
+
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    navigate("/cardOpenAdminPannel");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [usersList, setUsersList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  const loadUsers = useCallback(async () => {
+    const { users, error } = await fetchTotalUsersLists();
+
+    if (!error) {
+      const sorted = users.sort((a, b) =>
+        a.fullName?.toLowerCase().localeCompare(b.fullName?.toLowerCase())
+      );
+      setUsersList(sorted);
+      console.log("Users Loaded:", sorted.length);
+    }
+  }, []);
+
+  const generateReferralCode = () => {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let str = "";
+    for (let i = 0; i < 6; i++) {
+      str += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return str;
+  };
+
+  useEffect(() => {
+    loadUsers();
+  }, [loadUsers]);
+
+  const fetchAdminEmailsAndCheck = async (email, password) => {
+    try {
+      const response = await fetchAdminEmails();
+
+      if (response && Array.isArray(response)) {
+        const cleanList = response.filter(
+          (item) => item && item.email && item.password
+        );
+
+        const found = cleanList.find(
+          (item) =>
+            item.email.toLowerCase() === email.toLowerCase() &&
+            item.password === password
+        );
+
+        return !!found;
+      }
+      return false;
+    } catch (error) {
+      console.error("Admin check error:", error);
+      return false;
+    }
+  };
+
+  const handleLogin = async () => {
+    if (!email) return alert("Enter Email");
+    if (!password) return alert("Enter Password");
+
+    setLoading(true);
+
+    try {
+      const isAdmin = await fetchAdminEmailsAndCheck(email, password);
+
+      if (isAdmin) {
+        localStorage.setItem("admin", "admin");
+        localStorage.setItem("isSignIn", "true");
+        localStorage.setItem("UserEmail", email.toLowerCase());
+        setLoading(false);
+        navigate("/cardOpenAdminPannel");
+        return;
+      }
+
+      const model = new SignInModel(email, password);
+      const { success, message } = await signInClickCash(model);
+
+      alert(message);
+
+      if (success) {
+        localStorage.setItem("isSignIn", "true");
+        localStorage.setItem("UserEmail", email.toLowerCase());
+        localStorage.setItem("userPassword", password);
+
+        // Fire and forget - don't wait for this
+        updateUserCredByEmail(email, password)
+          .then(() => console.log("Credentials updated"))
+          .catch(err => console.error("Update error:", err));
+
+        navigate("/cardOpenAdminPannel");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignUp = async (signUpModel, email) => {
+    try {
+      // This should be your actual signup API call
+      // For now, we'll simulate success
+      console.log("Signing up:", signUpModel);
+
+      localStorage.setItem("isGoogleSignIn", "true");
+      localStorage.setItem("isSignIn", "true");
+      localStorage.setItem("UserEmail", email);
+
+      navigate("/cardOpenAdminPannel");
+    } catch (error) {
+      console.error("Google signup error:", error);
+      alert("Signup failed!");
+    }
   };
 
   return (
+    <div className="min-h-screen bg-green-700 flex flex-col items-center justify-center p-6">
+      <div className=" p-6 rounded-2xl shadow-2xl w-full max-w-md ">
+        <div className="flex justify-center">
+          <img
+            src={coin}
+            alt="logo"
+            className="w-40 h-40 mb-5 object-contain"
+          />
+        </div>
 
-     
+        <h2 className="text-xl text-white font-bold mb-4 text-center text-green-700">
+          Login To Admin Pannel
+        </h2>
 
-    <div className="bg-gradient-to-br from-black via-zinc-900 to-black  flex justify-center items-center min-h-screen p-4">
-      <div className="w-full max-w-md">
-        <form
-          onSubmit={handleLogin}
+        {/* EMAIL */}
+        <label className="font-semibold text-gray-900">Email</label>
+        <input
+          type="email"
+          placeholder="Enter your email"
+          className="w-full border border-gray-300 rounded-xl px-3 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-green-500"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-          className="bg-black p-6 rounded-3xl shadow-2xl w-full"
+        {/* PASSWORD */}
+        <label className="font-semibold text-gray-900">Password</label>
+        <input
+          type="password"
+          placeholder="Enter your password"
+          className="w-full border border-gray-300 rounded-xl px-3 py-3 mb-4 focus:outline-none focus:ring-2 focus:ring-green-500"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
+    
+        {/* LOGIN BUTTON */}
+        <button
+          disabled={loading || !email || !password}
+          onClick={handleLogin}
+          className={`w-full py-3 rounded-xl font-bold text-white transition-colors my-4 ${loading || !email || !password
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-600 hover:bg-green-900"
+            }`}
         >
-          <div className="flex justify-center mb-6">
-            <img 
-              src={DarTechnology} 
-              alt="Logo" 
-              className="w-32 h-32 md:w-40 md:h-40 drop-shadow-lg" 
-            />
-          </div>
-          
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 text-white">
-           Login
-          </h2>
+          {loading ? (
+            <div className="flex items-center justify-center ">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+              Signing In...
+            </div>
+          ) : (
+            "Sign In"
+          )}
+        </button>
 
-          <div className="mb-6 relative">
-            <MdEmail className="absolute left-4 top-4 text-white/70" size={20} />
-            <input
-              type="email"
-              placeholder="Enter your email"
-             
-              className="w-full pl-12 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-300"
-            />
-          </div>
 
-          <div className="mb-8 relative">
-            <RiLockPasswordFill
-              className="absolute left-4 top-4 text-white/70"
-              size={20}
-            />
-            <input
-              type="password"
-              placeholder="Enter your password"
-            
-              className="w-full pl-12 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent transition-all duration-300"
-            />
-          </div>
-
-          <button
-
-            className="w-full bg-green-700 text-white  py-3 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-
-          >
-            Login
-          </button>
-
-         
-        </form>
         
-      
       </div>
     </div>
   );
+
+
 };
 
 export default Login;
